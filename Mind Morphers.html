@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mind Morphers Quiz</title>
+  <style>
+    /* ===== Reset & Global ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      color: white;
+      text-align: center;
+      overflow-x: hidden;
+    }
+    .page {
+      display: none;
+      min-height: 100vh;
+      width: 100%;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      padding-top: 100px;
+    }
+    .active {
+      display: block;
+    }
+
+    /* ===== Landing Page ===== */
+    #landing {
+      background: url('./Images/Home.jpg') center/cover no-repeat;
+      position: relative;
+    }
+    #landing button {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      left: 46%;
+      transform: translate(-50%, -50%);
+      background-color: orangered;
+      color: white;
+      font-size: 1.5rem;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 1em;
+      cursor: pointer;
+    }
+
+    /* ===== Common Background for other pages ===== */
+    #homePage, #quizPage, #resultPage {
+      background: url('./Images/Quizbg.png') center/cover no-repeat;
+    }
+
+    /* ===== Container ===== */
+    .container {
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+      background: rgba(0,0,0,0.5);
+      border-radius: 10px;
+    }
+
+    /* ===== Input ===== */
+    input[type="text"] {
+      width: 80%;
+      padding: 10px;
+      margin: 20px 0;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+    }
+
+    /* ===== Buttons ===== */
+    button {
+      background-color: orangered;
+      border: none;
+      border-radius: 1em;
+      padding: 10px 20px;
+      color: white;
+      font-size: 16px;
+      margin: 10px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background-color: #ff5a1f;
+    }
+    button:disabled {
+      background-color: grey;
+    }
+
+    /* ===== Questions ===== */
+    #questionContainer {
+      margin: 20px 0;
+    }
+    label {
+      display: block;
+      border: 1px solid white;
+      border-radius: 5px;
+      padding: 10px;
+      margin: 10px 0;
+      cursor: pointer;
+      text-align: left;
+      font-size: 18px;
+      font-family: monospace;
+    }
+    label:hover {
+      background: white;
+      color: black;
+    }
+    input[type="radio"] {
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border: 2px solid white;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+    input[type="radio"]:checked {
+      background-color: blue;
+      border: 5px solid white;
+      box-shadow: 0 0 0 2px #007bff;
+    }
+
+    /* ===== Result ===== */
+    #resultImage {
+      width: 100%;
+      height: auto;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Landing Page -->
+  <div id="landing" class="page active">
+    <button id="startBtn">LET START</button>
+  </div>
+
+  <!-- Home Page -->
+  <div id="homePage" class="page">
+    <div class="container">
+      <h1>Quiz Application</h1>
+      <input type="text" id="username" placeholder="Enter your name" required>
+      <button id="beginQuizBtn">Start Quiz</button>
+    </div>
+  </div>
+
+  <!-- Quiz Page -->
+  <div id="quizPage" class="page">
+    <div class="container">
+      <div id="questionContainer"></div>
+      <button id="prevBtn">Previous</button>
+      <button id="nextBtn">Next</button>
+      <button id="finishBtn" style="display:none;">Finish</button>
+    </div>
+  </div>
+
+  <!-- Result Page -->
+  <div id="resultPage" class="page">
+    <div class="container">
+      <h1>Quiz Result</h1>
+      <p id="resultMessage"></p>
+      <p>Your Score: <span id="userScore"></span>/10</p>
+      <img src="" alt="Result Image" id="resultImage">
+      <button id="restartBtn">Restart</button>
+    </div>
+  </div>
+
+  <script>
+    // Variables
+    let currentQuestionIndex = 0;
+    let userName = '';
+    let userAnswers = new Array(10).fill(null);
+
+    // Questions
+    const questions = [
+      { question: 'Who is the ghost?', options: ['Leo', 'Rolex', 'Vikram', 'Santhanam', 'Dilli'], correctAnswer: 2 },
+      { question: 'When leo flashback has been happened?', options: ['1995', '1999', '1997', '1994', '1996'], correctAnswer: 1 },
+      { question: 'How many kilograms of cocaine has been seized while the Trichy drug bust?', options: ['500kgs', '400kgs', '700kgs', '800kgs', '900kgs'], correctAnswer: 4 },
+      { question: 'When Vikram became commander to the black squad?', options: ['1987', '1986', '1985', '1989', '1983'], correctAnswer: 0 },
+      { question: 'Which gun Dilli used to attack gang?', options: ['M249', 'Gatling', 'M134', 'Kord', 'M60'], correctAnswer: 2 },
+      { question: 'How many years Rolex spent to build his syndicate?', options: ['26 years', '24 years', '28 years', '27 years', '25 years'], correctAnswer: 3 },
+      { question: 'Who created "Datura" drug?', options: ['Rolex', 'Antony', 'Santhanam', 'Harold', 'Leo'], correctAnswer: 3 },
+      { question: 'What is the name of Parthiban\'s cafe?', options: ['Wild Cafe', 'Wild Tea', 'Wild Beans', 'Wild Coffee', 'Wild Cafe'], correctAnswer: 2 },
+      { question: 'Which substances supplied by Santhanam & his gang?', options: ['Erythroxima', 'Rohypnol', 'Datura', 'Erythroxylam', 'Cocaine'], correctAnswer: 3 },
+      { question: 'Who is the most powerful character in LCU?', options: ['Amar', 'Rolex', 'Vikram', 'Leo', 'Dilli'], correctAnswer: 3 }
+    ];
+
+    // Show page function
+    function showPage(id) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    // Show question
+    function showQuestion() {
+      const q = questions[currentQuestionIndex];
+      const container = document.getElementById('questionContainer');
+      container.innerHTML = `
+        <h2>${q.question}</h2>
+        ${q.options.map((opt, i) => `
+          <label>
+            <input type="radio" name="answer" value="${i}" 
+              ${userAnswers[currentQuestionIndex] === i ? 'checked' : ''} 
+              onclick="saveAnswer(${i})"> ${opt}
+          </label>
+        `).join('')}
+      `;
+      document.getElementById('prevBtn').style.display = currentQuestionIndex === 0 ? 'none' : 'inline-block';
+      document.getElementById('nextBtn').style.display = currentQuestionIndex === questions.length - 1 ? 'none' : 'inline-block';
+      document.getElementById('finishBtn').style.display = currentQuestionIndex === questions.length - 1 ? 'inline-block' : 'none';
+    }
+
+    function saveAnswer(index) {
+      userAnswers[currentQuestionIndex] = index;
+    }
+
+    // Navigation
+    document.getElementById('prevBtn').addEventListener('click', () => {
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        showQuestion();
+      }
+    });
+
+    document.getElementById('nextBtn').addEventListener('click', () => {
+      if (currentQuestionIndex < questions.length - 1) {
+        currentQuestionIndex++;
+        showQuestion();
+      }
+    });
+
+    document.getElementById('finishBtn').addEventListener('click', () => {
+      const allAnswered = userAnswers.every(a => a !== null);
+      if (!allAnswered) {
+        alert('Please answer all questions before finishing.');
+        return;
+      }
+      const score = userAnswers.filter((a, i) => a === questions[i].correctAnswer).length;
+      let img = '';
+      if (score === 10) img = 'images/Leo.png';
+      else if (score >= 8) img = 'images/Rolex.png';
+      else if (score >= 6) img = 'images/Vikram.png';
+      else if (score >= 4) img = 'images/Dilli.png';
+      else if (score >= 2) img = 'images/Amar.png';
+      else img = 'images/Daniel.png';
+
+      document.getElementById('resultMessage').textContent = `Quiz Finished, ${userName}!`;
+      document.getElementById('userScore').textContent = score;
+      document.getElementById('resultImage').src = img;
+
+      showPage('resultPage');
+    });
+
+    document.getElementById('restartBtn').addEventListener('click', () => {
+      userAnswers.fill(null);
+      document.getElementById('username').value = '';
+      showPage('homePage');
+    });
+
+    // Start Button
+    document.getElementById('startBtn').addEventListener('click', () => {
+      showPage('homePage');
+    });
+
+    // Begin Quiz Button
+    document.getElementById('beginQuizBtn').addEventListener('click', () => {
+      userName = document.getElementById('username').value.trim();
+      if (!userName) {
+        alert('Please enter your name');
+        return;
+      }
+      currentQuestionIndex = 0;
+      showPage('quizPage');
+      showQuestion();
+    });
+  </script>
+</body>
+</html>
