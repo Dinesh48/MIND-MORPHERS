@@ -9,7 +9,7 @@ About the project:
 
 To this project:
 	
-	1.Open Mind Morphers.html file.
+	1.Open index.html file.
 	2.Click "LETS START" button.
 	3.Then, you have enter your name,then click "START QUIZ" button.
 	4.Now,quiz will be started.
@@ -19,3 +19,4 @@ To this project:
 
 						THANKING YOU
 	
+
