@@ -242,11 +242,11 @@
       }
       const score = userAnswers.filter((a, i) => a === questions[i].correctAnswer).length;
       let img = '';
-      if (score === 10) img = 'images/Leo.png';
-      else if (score >= 8) img = 'images/Rolex.png';
-      else if (score >= 6) img = 'images/Vikram.png';
-      else if (score >= 4) img = 'images/Dilli.png';
-      else if (score >= 2) img = 'images/Amar.png';
+      if (score === 10) img = 'Images/Leo.png';
+      else if (score >= 8) img = 'Images/Rolex.png';
+      else if (score >= 6) img = 'Images/Vikram.png';
+      else if (score >= 4) img = 'Images/Dilli.png';
+      else if (score >= 2) img = 'Images/Amar.png';
       else img = 'images/Daniel.png';
 
       document.getElementById('resultMessage').textContent = `Quiz Finished, ${userName}!`;
@@ -281,3 +281,4 @@
   </script>
 </body>
 </html>
+
